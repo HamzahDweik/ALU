@@ -13,11 +13,11 @@ r0= (x)|((~y)&z);
 //f1 = 
 r1= ~(~(~y&z)&(~x));
 
-//f2 = 
-r2= (w&x&y&z)|(~w&~x&~y&~z);
+//f2 = yz + w'y'z' + w'xy' + xy'z'+ wx'z + wx'y 
+r2=  (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y); 
 
-//f3 = 
-r3=
+//f3 = w'xy'z' + x'z + w'x'y + wy'z + wx'y'
+r3= (~w&x&~y&~z)|(~x&z)|(~w&~x&y)|(w&~y&z)|(w&~x&~y);
 
 //f4 = 
 r4=
