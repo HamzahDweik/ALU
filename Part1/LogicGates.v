@@ -55,7 +55,7 @@ module testbench();
  
   initial begin
    	
-  $display ("|##|A|B|C|D|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
+	  $display ("|##|W|X|Y|Z|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
   $display ("|==+==+==+==+==+==+==+==+==+==+==+==+==+=|");
 
 	for (i = 0; i < 16; i = i + 1) 
