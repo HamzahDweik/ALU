@@ -14,12 +14,12 @@ r0= (w&(~x))|(x&y&(~z))|((~y)&z);
 r1= (w&x)|(x&(~z))|(y&z);
 
 //f2 = yz + w'y'z' + w'xy' + xy'z'+ wx'z + wx'y 
-r2=  (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y); 
+r2= (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y); 
 
 //f3 = w'xy'z' + x'z + w'x'y + wy'z + wx'y'
 r3= (~w&x&~y&~z)|(~x&z)|(~w&~x&y)|(w&~y&z)|(w&~x&~y);
 
-//f4 = 
+//f4 =  
 r4=
 
 //f5 = 
@@ -55,7 +55,7 @@ module testbench();
  
   initial begin
    	
-	  $display ("|##|W|X|Y|Z|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
+  $display ("|##|W|X|Y|Z|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
   $display ("|==+==+==+==+==+==+==+==+==+==+==+==+==+=|");
 
 	for (i = 0; i < 16; i = i + 1) 
