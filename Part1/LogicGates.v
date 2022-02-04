@@ -1,17 +1,17 @@
 
-module Breadboard	(w,x,y,z,r0,r1,r2, r3, r4, r5, r6, r7, r8, r9);
+module Breadboard	(w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9);
 input w,x,y,z;
-output r0, r1, r2;  
-reg r0,r1,r2, r3, r4, r5, r6, r7, r8, r9;
+output r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;  
+reg r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;
 wire w,x,y,z;
 
-always @ ( w,x,y,z,r1,r2,r3) begin
+always @ (w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9) begin
 
 //f0 = wx' + xyz' + y'z
-r0= (x)|((~y)&z);
+r0= (w&(~x))|(x&y&(~z))|((~y)&z);
 
-//f1 = 
-r1= ~(~(~y&z)&(~x));
+//f1 = wx + xz' + yz
+r1= (w&x)|(x&(~z))|(y&z);
 
 //f2 = 
 r2= (w&x&y&z)|(~w&~x&~y&~z);
