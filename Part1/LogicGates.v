@@ -31,11 +31,11 @@ r6=
 //f7 = 
 r7=
 
-//f8 = 
-r8=
+//f8 = w'z' + w'y + xy' + wy'z
+r8= (~w&~z)|(~w&y)|(x&~y)|(w&~y&z);
 
-//f9 = 
-r9=
+//f9 =  xz + x`yz` + wxy` + wy`z
+r9= (x&z)|(~x&y&~z)|(w&x&~y)|(w&~y&z);
 
 end
 
