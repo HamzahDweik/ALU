@@ -7,7 +7,7 @@ wire w,x,y,z;
 
 always @ (w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9) begin
 
-//f0 = wx' + xyz' + y'z
+// f0 = wx' + xyz' + y'z
 r0= (w&(~x))|(x&y&(~z))|((~y)&z);
 
 //f1 = wx + xz' + yz
