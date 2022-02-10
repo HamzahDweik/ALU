@@ -31,11 +31,11 @@ r6= ((~w)&(~x)&(~y)&z)|(w&x)|(x&(~y)&(~z))|(w&(~y)&(~z)|(w&y&z));
 //F7= WXYZ' + X'Y'Z' + X'YZ + W'Y'Z' + W'YZ + WX'Y'
 r7= (w&x&y&(~z))|((~x)&(~y)&(~z))| ((~x)&y&z)|((~w)&(~y)&(~z))|((~w)&y&z)|(w&(~x)&(~y));
 
-//f8 = w'z' + w'y + xy' + wy'z
-r8= ((~w)&(~z))|((~w)&y)|(x&(~y))|(w&(~y)&z);
+//f8 = w`x`y`z` + w`x`yz` + w`x`yz + w`xy`z`+ w`xy`z + w`xyz` + w`xyz + wx`y`z + wxy`z` + wxy`z 
+r8= (~w&~x&~y&~z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&~y&z)|(w&x&~y&~z)|(w&x&~y&z);
 
-//f9 =  xz + x`yz` + wxy` + wy`z
-r9= (x&z)|(~x&y&~z)|(w&x&~y)|(w&~y&z);
+//f9 = w'x'yz` + w'xy'z + w'xyz + wx'y'z + wx'yz' + wxy'z' + wxy'z + wxyz
+r9= (~w&~x&y&~z)|(~w&x&~y&z)|(~w&x&y&z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&z);
 
 end
 
