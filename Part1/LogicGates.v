@@ -10,8 +10,8 @@ always @ (w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9) begin
 // f0 = w'x'y'z + w'xy'z + w'xyz' + wx'y'z' + wx'y'z + wx'yz' + wx'yz + wxy'z + wxyz'
 r0= (~w&~x&~y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&~x&y&z)|(w&x&~y&z)|(w&x&y&~z);
 
-//f1 = wx + xz' + yz
-r1= (w&x)|(x&(~z))|(y&z);
+//f1 = w'x'yz + w'xy'z' + w'xyz' + w'xyz + wx'yz + wxy'z' + wxy'z + wxyz' + wxyz
+r1= (~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&~z)|(w&x&y&z);
 
 //f2 = yz + w'y'z' + w'xy' + xy'z'+ wx'z + wx'y 
 r2= (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y); 
@@ -19,11 +19,11 @@ r2= (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y);
 //f3 = w'xy'z' + x'z + w'x'y + wy'z + wx'y'
 r3= (~w&x&~y&~z)|(~x&z)|(~w&~x&y)|(w&~y&z)|(w&~x&~y);
 
-//f4 = w'y + xy'z + w'x'z' + wxy' 
-r4= ((~w)&y)|(x&(~y)&z)|((~w)&(~x)&(~z))|(w&x&(~y));
+//f4 = w'x'y'z' + w'x'yz' + w'x'yz + w'xy'z + w'xyz' + w'xyz + wxy'z' + wxy'z
+r4= (~w&~x&~y&~z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&x&~y&~z)|(w&x&~y&z);
 
-//f5 = w'x + xz' + xy + w'yz + wy'z'
-r5= ((~w)&x)|(x&(~z))|(x&y)|((~w)&y&z)|(w&(~y)&(~z));
+//f5 = w'x'yz + w'xy'z' + w'xy'z + w'xyz' + w'xyz + wx'y'z' + wxy'z' + wxyz' + wxyz
+r5= (~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&~y&~z)|(w&x&~y&~z)|(w&x&y&~z)|(w&x&y&z);
 
 //f6 = F6=W'X'Y'Z + WX + XY'Z' + WY'Z' +WYZ
 r6= ((~w)&(~x)&(~y)&z)|(w&x)|(x&(~y)&(~z))|(w&(~y)&(~z)|(w&y&z));
