@@ -13,11 +13,11 @@ r0= (~w&~x&~y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&~z)|(w
 //f1 = w'x'yz + w'xy'z' + w'xyz' + w'xyz + wx'yz + wxy'z' + wxy'z + wxyz' + wxyz
 r1= (~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&~z)|(w&x&y&z);
 
-//f2 = yz + w'y'z' + w'xy' + xy'z'+ wx'z + wx'y 
-r2= (y&z)|(~w&~y&~z)|(~w&x&~y)|(x&~y&~z)|(w&~x&z)|(w&~x&y); 
+//f2 = w'x'y'z' + w'x'yz + w'xy'z' + w'x'y'z + w'xyz + wx'y'z + wx'yz' + wx'yz + wxy'z' + wxyz
+r2= (~w&~x&~y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&y&z);
 
-//f3 = w'xy'z' + x'z + w'x'y + wy'z + wx'y'
-r3= (~w&x&~y&~z)|(~x&z)|(~w&~x&y)|(w&~y&z)|(w&~x&~y);
+//f3 = w'x'y'z + w'x'yz' + w'x'yz + w'xy'z' + wx'y'z' + wx'y'z + wx'yz + wxy'z
+r3= (~w&~x&~y&z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&z)|(w&x&~y&z);
 
 //f4 = w'x'y'z' + w'x'yz' + w'x'yz + w'xy'z + w'xyz' + w'xyz + wxy'z' + wxy'z
 r4= (~w&~x&~y&~z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&x&~y&~z)|(w&x&~y&z);
