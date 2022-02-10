@@ -1,5 +1,5 @@
 
-module Breadboard	(w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9);
+module Breadboard(w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9);
 input w,x,y,z;
 output r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;  
 reg r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;
@@ -44,6 +44,7 @@ endmodule
 
 module testbench();
 
+  //intialization
   reg [4:0] i;
   reg  a;
   reg  b;
@@ -52,11 +53,13 @@ module testbench();
   
   wire  f0,f1,f2,f3,f4,f5,f6,f7,f8,f9;
   Breadboard zap(a,b,c,d,f0,f1,f2,f3,f4,f5,f6,f7,f8,f9);
- 
+
+  //test stimulus
   initial begin
    	
-  $display ("|##|W|X|Y|Z|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
-  $display ("|==+=+=+=+=+==+==+==+==+==+==+==+==+==+==|");
+	//display table
+  	$display ("|##|W|X|Y|Z|F0|F1|F2|F3|F4|F5|F6|F7|F8|F9|");
+  	$display ("|==+=+=+=+=+==+==+==+==+==+==+==+==+==+==|");
 
 	for (i = 0; i < 16; i = i + 1) 
 	begin
