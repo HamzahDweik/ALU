@@ -7,8 +7,8 @@ wire w,x,y,z;
 
 always @ (w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9) begin
 
-// f0 = wx' + xyz' + y'z
-r0= (w&(~x))|(x&y&(~z))|((~y)&z);
+// f0 = w'x'y'z + w'xy'z + w'xyz' + wx'y'z' + wx'y'z + wx'yz' + wx'yz + wxy'z + wxyz'
+r0= (~w&~x&~y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&~x&y&z)|(w&x&~y&z)|(w&x&y&~z);
 
 //f1 = wx + xz' + yz
 r1= (w&x)|(x&(~z))|(y&z);
@@ -67,7 +67,7 @@ module testbench();
 		 
 	    #60;
 		 	
-		$display ("|%2d|%1d|%1d|%1d|%1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d|",'hi,a,b,c,d,f0,f1,f2,f3,f4,f5,f6,f7,f8,f9);
+		$display ("|%2d|%1d|%1d|%1d|%1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d| %1d|",i,a,b,c,d,f0,f1,f2,f3,f4,f5,f6,f7,f8,f9);
 		if(i%4==3)
 		 $write ("|--+-+-+-+-+--+--+--+--+--+--+--+--+--+--|\n");
 
