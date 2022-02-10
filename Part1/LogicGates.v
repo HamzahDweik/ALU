@@ -25,11 +25,14 @@ r4= ((~w)&y)|(x&(~y)&z)|((~w)&(~x)&(~z))|(w&x&(~y));
 //f5 = w'x + xz' + xy + w'yz + wy'z'
 r5= ((~w)&x)|(x&(~z))|(x&y)|((~w)&y&z)|(w&(~y)&(~z));
 
-//f6 = F6=W'X'Y'Z + WX + XY'Z' + WY'Z' +WYZ
-r6= ((~w)&(~x)&(~y)&z)|(w&x)|(x&(~y)&(~z))|(w&(~y)&(~z)|(w&y&z));
 
-//F7= WXYZ' + X'Y'Z' + X'YZ + W'Y'Z' + W'YZ + WX'Y'
-r7= (w&x&y&(~z))|((~x)&(~y)&(~z))| ((~x)&y&z)|((~w)&(~y)&(~z))|((~w)&y&z)|(w&(~x)&(~y));
+//F6 = W'X'Y'Z + W'XY'Z' + WX'Y'Z' + WX'YZ' + WXY'Z' + WXY'Z + WXYZ' + WXYZ
+r6 = ((~w)&(~x)&(~y)&z)|((~w)&x&(~y)&(~z))|(w&(~x)&(~y)&(~z))|(w&(~x)&y&(z))|(w&x&(~y)&(~z))|(w&x&(~y)&z)|(w&x&y&(~z))|(w&x&y&z);
+
+
+//F7 = W'X'Y'Z' + W'X'YZ + W'XY'Z' + W'XY'Z' + W'XYZ + WX'Y'Z' + WX'Y'Z + WX'YZ' WXYZ'
+r7 = ((~w)&(~x)&(~y)&(~z))|((~w)&(~x)&(y)&z)|((~w)&(x)&(~y)&(~z))|((~w)&(x)&(~y)&(~z))|((~w)&(x)&(y)&(z))|((w)&(~x)&(~y)&(z)) |((w)&(~x)&(y)&(z))| ((w)&(x)&(y)&(~z))| (w&~x&~y&~z);
+
 
 //f8 = w'z' + w'y + xy' + wy'z
 r8= ((~w)&(~z))|((~w)&y)|(x&(~y))|(w&(~y)&z);
