@@ -1,78 +1,12 @@
-//=============================================
-// Half Adder
-//=============================================
-module HalfAdder(A,B,carry,sum);
-	input A;
-	input B;
-	output carry;
-	output sum;
-	reg carry;
-	reg sum;
-//---------------------------------------------	
-	always @(*) 
-	  begin
-	    sum= A ^ B;
-	    carry= A & B;
-	  end
-//---------------------------------------------
-endmodule
-//=============================================
-// Full Adder
-//=============================================
-module FullAdder(A,B,C,carry,sum);
-	input A;
-	input B;
-	input C;
-	output carry;
-	output sum;
-	reg carry;
-	reg sum;
-//---------------------------------------------	
-	wire c0;
-	wire s0;
-	wire c1;
-	wire s1;
-//---------------------------------------------
-	HalfAdder ha1(A ,B,c0,s0);
-	HalfAdder ha2(s0,C,c1,s1);
-//---------------------------------------------
-	always @(*) 
-	  begin
-	    sum=s1;//
-		sum= A^B^C;
-	    carry=c1|c0;//
-		carry= ((A^B)&C)|(A&B);  
-	  end
-//---------------------------------------------
-	
-endmodule
-
-//completed
-module SixteenBitFullAdder(A,B,C,Carry,Sum);
-input [15:0] A;
-input [15:0] B;
-input C;
-output [15:0] Carry;
-output [15:0] Sum;
-FullAdder FA0(A[0],B[0],C       ,Carry[0],Sum[0]);
-FullAdder FA1(A[1],B[1],Carry[0],Carry[1],Sum[1]);
-FullAdder FA2(A[2],B[2],Carry[1],Carry[2],Sum[2]);
-FullAdder FA3(A[3],B[3],Carry[2],Carry[3],Sum[3]);
-FullAdder FA4(A[4],B[4],Carry[3],Carry[4],Sum[4]);
-FullAdder FA5(A[5],B[5],Carry[4],Carry[5],Sum[5]);
-FullAdder FA6(A[6],B[6],Carry[5],Carry[6],Sum[6]);
-FullAdder FA7(A[7],B[7],Carry[6],Carry[7],Sum[7]);
-FullAdder FA8(A[8],B[8],Carry[7],Carry[8],Sum[8]);
-FullAdder FA9(A[9],B[9],Carry[8],Carry[9],Sum[9]);
-FullAdder FA10(A[10],B[10],Carry[9],Carry[10],Sum[10]);
-FullAdder FA11(A[11],B[11],Carry[10],Carry[11],Sum[11]);
-FullAdder FA12(A[12],B[12],Carry[11],Carry[12],Sum[12]);
-FullAdder FA13(A[13],B[13],Carry[12],Carry[13],Sum[13]);
-FullAdder FA14(A[14],B[14],Carry[13],Carry[14],Sum[14]);
-FullAdder FA15(A[15],B[15],Carry[14],Carry[15],Sum[15]);
-endmodule;
-
-
+//=================================================================
+//
+// SixteenBitMultiplier
+//
+// Inputs:
+// A, a 16-Bit Integer Input
+// B, a 16-Bit Integer Input
+// C, an 32-Bit Integer Output
+//=================================================================
 module SixteenBitMultiplier(A,B,C);
 input  [15:0] A;
 input  [15:0] B;
@@ -230,85 +164,41 @@ begin
 
   
    
-  C[0]=  A[0]&B[0];//From Gates
-//=================================  
-  C[1]=  Sum0[0];//From Adder0
- //=================================
-  C[2]=  Sum1[0];//From Adder1
- //=================================
-  C[3] = Sum2[0];//From Adder2
-  C[4] = Sum3[0];//From Adder2
-  C[5] = Sum4[0];//From Adder2
-  C[6] = Sum5[0];//From Adder2
-  C[7] = Sum6[0];//From Adder2
-  C[8] = Sum7[0];//From Adder2
-  C[9] = Sum8[0];//From Adder2
-  C[10] = Sum9[0];//From Adder2
-  C[11] = Sum10[0];//From Adder2
-  C[12] = Sum11[0];//From Adder2
-  C[13] = Sum12[0];//From Adder2
-  C[14] = Sum13[0];//From Adder2
-  C[15] = Sum14[0];//From Adder2
-  C[16] = Sum15[0];//From Adder2
-  C[17] = Sum2[2];//From Adder2
-  C[18] = Sum2[3];//From Adder2
-  C[19] = Carry2[3];//From Adder2
-  C[20] = Sum2[1];//From Adder2
-  C[21] = Sum2[2];//From Adder2
-  C[22] = Sum2[3];//From Adder2
-  C[23] = Carry2[3];//From Adder2
-  C[24] = Sum2[1];//From Adder2
-  C[25] = Sum2[2];//From Adder2
-  C[26] = Sum2[3];//From Adder2
-  C[27] = Carry2[3];//From Adder2
-  C[28] = Sum2[1];//From Adder2
-  C[29] = Sum2[2];//From Adder2
-  C[30] = Sum2[3];//From Adder2
-  C[31] = Carry2[3];//From Adder2
+  C[0]=  A[0]&B[0];
+  C[1]=  Sum0[0];
+  C[2]=  Sum1[0];
+  C[3] = Sum2[0]; 
+  C[4] = Sum3[0];
+  C[5] = Sum4[0]; 
+  C[6] = Sum5[0]; 
+  C[7] = Sum6[0];
+  C[8] = Sum7[0];  
+  C[9] = Sum8[0];  
+  C[10] = Sum9[0];  
+  C[11] = Sum10[0];  
+  C[12] = Sum11[0];  
+  C[13] = Sum12[0];  
+  C[14] = Sum13[0];  
+  C[15] = Sum14[0];  
+  C[16] = Sum14[1];  
+  C[17] = Sum14[2];  
+  C[18] = Sum14[3];  
+  C[19] = Sum14[4];  
+  C[20] = Sum14[5];  
+  C[21] = Sum14[6];  
+  C[22] = Sum14[7];  
+  C[23] = Sum14[8];  
+  C[24] = Sum14[9];  
+  C[25] = Sum14[10];  
+  C[26] = Sum14[11];  
+  C[27] = Sum14[12];  
+  C[28] = Sum14[13];  
+  C[29] = Sum14[14];  
+  C[30] = Sum14[15];  
+  C[31] = Carry14[15];
 
   
 end
 
 
-endmodule
-
-
-module testbench();
-
-reg  [3:0] A4;
-reg  [3:0] B4;
-wire [7:0] C4;
-
-reg [15:0] loopi;
-reg [15:0] loopj;
-
-reg [15:0] results [7:0] [7:0];
-reg indexi;
-reg indexj;
-
-FourBitMultiplier mult4(A4,B4,C4);
-
-initial
-begin
-
-
-for (loopi=0;loopi<16;loopi+=1)
-begin
-for (loopj=0;loopj<16;loopj+=1)
-begin
-	A4=loopi;
-	B4=loopj;
-	#10;
-	results[loopi][loopj]=C4;
-	$write(" %3d",C4);
-	end
-	$display(";");
-
-	
-end
-
-#10;
- 
-	
-end
 endmodule
