@@ -10,7 +10,7 @@
 //=================================================================
 
 //=================================================================
-module StructMux(channels, select, b);
+module m16x32Mux(channels, select, b);
 input [15:0][31:0] channels;
 input      [15:0] select;
 output      [31:0] b;

@@ -3,7 +3,7 @@
 // DECODER
 //
 //=================================================================
-module Dec4x16(binary,onehot);
+module m4x16Decoder(binary,onehot);
 	input [3:0] binary;
 	output [15:0]onehot;
 	

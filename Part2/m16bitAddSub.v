@@ -1,4 +1,4 @@
-module AddSub(inputA,inputB,mode,sum,carry,overflow);
+module m16bitAddSub(inputA,inputB,mode,sum,carry,overflow);
     input [15:0] inputA;
 	input [15:0] inputB;
     input mode;

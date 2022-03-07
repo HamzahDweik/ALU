@@ -7,7 +7,7 @@
 // B, a 16-Bit Integer Input
 // C, an 32-Bit Integer Output
 //=================================================================
-module SixteenBitMultiplier(A,B,C);
+module m16bitMultiplier(A,B,C);
 input  [15:0] A;
 input  [15:0] B;
 output [31:0] C;

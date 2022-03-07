@@ -1,0 +1,12 @@
+[        A       ][        B       ][       OP       ][                C              ][ E];
+[               4][               2][               1][                              6][ 0]: Adding two inputs less than 250;
+[               4][               2][               1][                              6][ 0]: Adding two inputs less than 250;
+[               7][               2][               2][                              5][ 0]: Subtracting two inputs less than 250;
+[               7][               2][               3][                             14][ 0]: Multiplying two inputs less than 250;
+[               7][               2][               4][                              3][ 0]: Dividing two inputs less than 250;
+[               7][               2][               5][                              1][ 0]: Modulo of two inputs less than 250;
+[           16388][           16386][               1][                     4294934534][ 1]: Adding two inputs greater than 16000;
+[           16391][           16386][               2][                              5][ 0]: Subtracting two inputs greater than 16000;
+[           16391][           16386][               3][                      268582926][ 0]: Multiplying two inputs greater than 16000;
+[           16391][           16386][               4][                              1][ 0]: Dividing two inputs greater than 16000;
+[           16391][           16386][               5][                              5][ 0]: Modulo of two inputs greater than 16000;
