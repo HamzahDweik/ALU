@@ -2,7 +2,7 @@
 //============================================
 //D Flip-Flop
 //============================================
-module DFF(clk,in,out);
+module m16bitDFF(clk,in,out);
 	input          clk;
 	input   in;
 	output  out;
@@ -12,22 +12,81 @@ module DFF(clk,in,out);
 	out = in;
 endmodule
 
-//============================================
-//HALF-ADDER
-//============================================
-module Add_half (input a, b,  output c_out, sum);
-   xor G1(sum, a, b);	 
-   and G2(c_out, a, b);
+//=============================================
+// Half Adder
+//=============================================
+module HalfAdder(A,B,carry,sum);
+	input A;
+	input B;
+	output carry;
+	output sum;
+	reg carry;
+	reg sum;
+//---------------------------------------------	
+	always @(*) 
+	  begin
+	    sum= A ^ B;
+	    carry= A & B;
+	  end
+//---------------------------------------------
 endmodule
 
-//============================================
-//FULL-ADDER
-//============================================
-module Add_full (input a, b, c_in, output c_out, sum);
-   wire w1, w2, w3;	 
-   Add_half M1 (a, b, w1, w2);
-   Add_half M0 (w2, c_in, w3, sum);
-   or (c_out, w1, w3);
+//=============================================
+// Full Adder
+//=============================================
+module FullAdder(A,B,C,carry,sum);
+	input A;
+	input B;
+	input C;
+	output carry;
+	output sum;
+	reg carry;
+	reg sum;
+//---------------------------------------------	
+	wire c0;
+	wire s0;
+	wire c1;
+	wire s1;
+//---------------------------------------------
+	HalfAdder ha1(A ,B,c0,s0);
+	HalfAdder ha2(s0,C,c1,s1);
+//---------------------------------------------
+	always @(*) 
+	  begin
+	    sum=s1;//
+		sum= A^B^C;
+	    carry=c1|c0;//
+		carry= ((A^B)&C)|(A&B);  
+	  end
+//---------------------------------------------
+	
+endmodule
+
+//=============================================
+// SixteenBitFullAdder
+//=============================================
+module SixteenBitFullAdder(A,B,C,Carry,Sum);
+input [15:0] A;
+input [15:0] B;
+input C;
+output [15:0] Carry;
+output [15:0] Sum;
+FullAdder FA0(A[0],B[0],C       ,Carry[0],Sum[0]);
+FullAdder FA1(A[1],B[1],Carry[0],Carry[1],Sum[1]);
+FullAdder FA2(A[2],B[2],Carry[1],Carry[2],Sum[2]);
+FullAdder FA3(A[3],B[3],Carry[2],Carry[3],Sum[3]);
+FullAdder FA4(A[4],B[4],Carry[3],Carry[4],Sum[4]);
+FullAdder FA5(A[5],B[5],Carry[4],Carry[5],Sum[5]);
+FullAdder FA6(A[6],B[6],Carry[5],Carry[6],Sum[6]);
+FullAdder FA7(A[7],B[7],Carry[6],Carry[7],Sum[7]);
+FullAdder FA8(A[8],B[8],Carry[7],Carry[8],Sum[8]);
+FullAdder FA9(A[9],B[9],Carry[8],Carry[9],Sum[9]);
+FullAdder FA10(A[10],B[10],Carry[9],Carry[10],Sum[10]);
+FullAdder FA11(A[11],B[11],Carry[10],Carry[11],Sum[11]);
+FullAdder FA12(A[12],B[12],Carry[11],Carry[12],Sum[12]);
+FullAdder FA13(A[13],B[13],Carry[12],Carry[13],Sum[13]);
+FullAdder FA14(A[14],B[14],Carry[13],Carry[14],Sum[14]);
+FullAdder FA15(A[15],B[15],Carry[14],Carry[15],Sum[15]);
 endmodule
 
 
@@ -64,58 +123,65 @@ end
 endmodule
 
 //============================================
-//ADD operation
+//ADD,SUB operations
 //============================================
-module ADDER(inputA,inputB,outputC,carry,error);
-//---------------------------------------
-input [15:0] inputA;
-input [15:0] inputB;
-wire  [15:0] inputA;
-wire  [15:0] inputB;
-//---------------------------------------
-output [15:0] outputC;
-output       carry;
-output error;
-reg error;
-reg    [15:0] outputC;
-reg          carry;
-//---------------------------------------
+module m16bitAddSub(inputA,inputB,mode,sum,carry,overflow);
+    input [15:0] inputA;
+	input [15:0] inputB;
+    input mode;
+    output [15:0] sum;
+	output carry;
+    output overflow;
 
-wire [15:0] S;
-wire [15:0] Cin;
-wire [15:0] Cout;
+	wire c0; //MOde assigned to C0
 
-//Link the wires between the Adders
-assign Cin[0]=0;
-assign Cin[1]=Cout[0];
-assign Cin[2]=Cout[1];
-assign Cin[3]=Cout[2];
-assign Cin[4]=Cout[3];
-assign Cin[5]=Cout[4];
-assign Cin[6]=Cout[5];
-assign Cin[7]=Cout[6];
-assign Cin[8]=Cout[7];
-assign Cin[9]=Cout[8];
-assign Cin[10]=Cout[9];
-assign Cin[11]=Cout[10];
-assign Cin[12]=Cout[11];
-assign Cin[13]=Cout[12];
-assign Cin[14]=Cout[13];
-assign Cin[15]=Cout[14];
+    wire b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15; //XOR Interfaces
+	wire c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16; //Carry Interfaces
+	
+	assign c0=mode;//Mode=0, Addition; Mode=1, Subtraction
+	
+    assign b0 = inputB[0] ^ mode;//Flip the Bit if Subtraction
+    assign b1 = inputB[1] ^ mode;//Flip the Bit if Subtraction
+    assign b2 = inputB[2] ^ mode;//Flip the Bit if Subtraction
+    assign b3 = inputB[3] ^ mode;//Flip the Bit if Subtraction
+	assign b4 = inputB[4] ^ mode;//Flip the Bit if Subtraction
+    assign b5 = inputB[5] ^ mode;//Flip the Bit if Subtraction
+    assign b6 = inputB[6] ^ mode;//Flip the Bit if Subtraction
+    assign b7 = inputB[7] ^ mode;//Flip the Bit if Subtraction
+	assign b8 = inputB[8] ^ mode;//Flip the Bit if Subtraction
+    assign b9 = inputB[9] ^ mode;//Flip the Bit if Subtraction
+    assign b10 = inputB[10] ^ mode;//Flip the Bit if Subtraction
+    assign b11 = inputB[11] ^ mode;//Flip the Bit if Subtraction
+	assign b12 = inputB[12] ^ mode;//Flip the Bit if Subtraction
+    assign b13 = inputB[13] ^ mode;//Flip the Bit if Subtraction
+    assign b14 = inputB[14] ^ mode;//Flip the Bit if Subtraction
+    assign b15 = inputB[15] ^ mode;//Flip the Bit if Subtraction
 
+	FullAdder FA0(inputA[0],b0,  c0,c1,sum[0]);
+	FullAdder FA1(inputA[1],b1,  c1,c2,sum[1]);
+	FullAdder FA2(inputA[2],b2,  c2,c3,sum[2]);
+	FullAdder FA3(inputA[3],b3,  c3,c4,sum[3]);
+	FullAdder FA4(inputA[4],b4,  c4,c5,sum[4]);
+	FullAdder FA5(inputA[5],b5,  c5,c6,sum[5]);
+	FullAdder FA6(inputA[6],b6,  c6,c7,sum[6]);
+	FullAdder FA7(inputA[7],b7,  c7,c8,sum[7]);
+	FullAdder FA8(inputA[8],b8,  c8,c9,sum[8]);
+	FullAdder FA9(inputA[9],b9,  c9,c10,sum[9]);
+	FullAdder FA10(inputA[10],b10,  c10,c11,sum[10]);
+	FullAdder FA11(inputA[11],b11,  c11,c12,sum[11]);
+	FullAdder FA12(inputA[12],b12,  c12,c13,sum[12]);
+	FullAdder FA13(inputA[13],b13,  c13,c14,sum[13]);
+	FullAdder FA14(inputA[14],b14,  c14,c15,sum[14]);
+	FullAdder FA15(inputA[15],b15,  c15,c16,sum[15]);
 
-//Declare and Allocate 4 Full adders
-Add_full FA [15:0] (inputA,inputB,Cin,Cout,S);
-
-always @(*)
-begin
- carry=Cout[1];
- outputC=S;
- error=1;
-end
-
+	assign carry=c16;
+	assign overflow=c16^c15;
+ 
 endmodule
 
+//============================================
+//DIV operation
+//============================================
 module m16bitDivider(inputA,inputB,result,err);
 
 input [15:0]inputA;
@@ -144,6 +210,10 @@ begin
 
 endmodule
 
+
+//============================================
+//MOD operation
+//============================================
 module m16bitModulus(inputA,inputB,result,err);
 
 input [15:0]inputA;
@@ -173,6 +243,9 @@ end
 
 endmodule
 
+//============================================
+//MULT operation
+//============================================
 module m16bitMultiplier(A,B,C);
 input  [15:0] A;
 input  [15:0] B;
@@ -363,7 +436,7 @@ begin
   C[30] = Sum14[15];  
   C[31] = Carry14[15];
 
-  
+ 
 end
 
 
@@ -373,7 +446,7 @@ endmodule
 //============================================
 //AND operation
 //============================================
-module AND(inputA,inputB,outputC);
+module m16bitAND(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -410,7 +483,7 @@ endmodule
 //============================================
 //OR operation
 //============================================
-module OR(inputA,inputB,outputC);
+module m16bitOR(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -447,7 +520,7 @@ endmodule
 //============================================
 //XOR operation
 //============================================
-module XOR(inputA,inputB,outputC);
+module m16bitXOR(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -484,7 +557,7 @@ endmodule
 //============================================
 //XNOR operation
 //============================================
-module XNOR(inputA,inputB,outputC);
+module m16bitXNOR(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -521,7 +594,7 @@ endmodule
 //============================================
 //NOR operation
 //============================================
-module NOR(inputA,inputB,outputC);
+module m16bitNOR(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -558,7 +631,7 @@ endmodule
 //============================================
 //NAND operation
 //============================================
-module NAND(inputA,inputB,outputC);
+module m16bitNAND(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -595,7 +668,7 @@ endmodule
 //============================================
 //NOT operation
 //============================================
-module NOT(inputA,outputC);
+module m16bitNOT(inputA,outputC);
 input  [15:0] inputA;
 output [15:0] outputC;
 wire   [15:0] inputA;
@@ -628,6 +701,154 @@ end
 endmodule
 
 
+//=================================================================
+//
+//Breadboard
+//
+//=================================================================
+module breadboard(Clock,Reset,A,B,Result,Op,Error);
+
+
+input Clock;
+input Reset;
+input [15:0] A;
+input [15:0] B;
+input [3:0] Op;
+output [31:0] Result;
+output [1:0] Error;
+
+wire Clock;
+wire Reset;
+wire [15:0] A;
+wire [15:0] B;
+wire [3:0] Op;
+reg [31:0] Result;
+reg [1:0] Error;
+
+//==================
+//FOR MULITIPLEXER
+//==================
+wire [15:0][31:0]channels;
+wire [15:0] Onehot;
+wire [31:0] b;
+ 
+wire [15:0] Product;
+wire [15:0] Quotient;     
+wire [15:0] Remainder;
+wire [15:0] Anded;		
+wire [15:0] Nanded;
+wire [15:0] Nored;
+wire [15:0] Noted;
+wire [15:0] Ored;
+wire [15:0] Xnored;
+wire [15:0] Xored;
+wire [15:0] unknown;
+
+//==================
+//FOR ADDSUB
+//==================
+wire [15:0] Sum;
+wire carry;
+wire OFErr;
+reg Mode;
+reg addcheck;
+reg subcheck;
+
+//====================
+//FOR DIVIDER
+//====================
+wire Div0Err;
+reg divcheck;
+
+//====================
+//FOR MODULUS
+//====================
+wire Mod0Err;
+reg modcheck;
+
+//====================
+//FOR FLIPFLOP
+//====================
+
+reg  [31:0] Next;
+wire [31:0] Current;
+
+//=====================
+//Declare Modules
+//=====================
+
+m4x16Decoder Decoder(Op,Onehot);
+m16x32Mux Mux(channels,Onehot,b);
+
+m16bitAddSub AdderSubtractor (A,B,Mode,Sum,carry,OFErr);
+m16bitMultiplier Multiplier (A,B,Product);
+m16bitDivider Divider (A,B,Quotient,Div0Err); 
+m16bitModulus Modulus (A,B,Remainder,Mod0Err);
+m16bitAND And (A,B,Anded);
+m16bitNAND Nand (A,B, Nanded);
+m16bitNOR Nor (A,B Nored);
+m16bitNOT Not (A,B, Noted);
+m16bitOR Or (A,B, Ored);
+m16bitXNOR Xnor (A,B Xnored);
+m16bitXOR Xor (A,B, Xored);
+m16bitDFF Accumulator [31:0] (Clock,Next,Current);
+
+//=========================
+//Connect Wires
+//=========================
+
+assign channels[ 0]={16'b0000,cur};
+assign channels[ 1]={{16{Sum[15]}},Sum};
+assign channels[ 2]={{16{Sum[15]}},Sum};
+assign channels[ 3]=         Product;
+assign channels[ 4]={{16{Quotient[15]}},Quotient};
+assign channels[ 5]={{16{Remainder[15]}},Remainder};
+assign channels[ 6]={16'b0000,unknown};
+assign channels[ 7]={16'b0000,unknown};
+assign channels[ 8]={16'b0000,unknown};
+assign channels[ 9]={16'b0000,unknown};
+assign channels[10]={16'b0000,unknown};
+assign channels[11]={16'b0000,unknown};
+assign channels[12]={16'b0000,unknown};
+assign channels[13]={16'b0000,unknown};
+assign channels[14]={16'b0000,unknown};
+assign channels[15]={16'b0000,unknown};
+
+ 
+
+always@(*)
+begin
+
+//NOTE TO GRADER
+//=================================================================
+//
+//Error-handling - Tried to keep the top-level diagram top-level. We did not want to draw out too many "And" and "Or" gates
+// Encapsulated the logic below in a block called Error-handling
+//					|
+//					V
+//=================================================================
+
+//Check for Subtraction
+Mode    =~Op[3]&~Op[2]&Op[1]&~Op[0];
+
+//To Tidy Up the Error Mode
+addcheck=~Op[3]&~Op[2]&~Op[1]&Op[0];
+subcheck= Mode;
+divcheck=~Op[3]& Op[2]&~Op[1]&~Op[0];
+modcheck=~Op[3]& Op[2]&~Op[1]&Op[0];
+
+//Error Codes
+Error[0]=(OFErr       )&(addcheck|subcheck);
+Error[1]=(Div0Err|Mod0Err)&(divcheck|modcheck);
+
+//Return value, register C(Testbench) = to wire b(Multiplexer)
+assign Result=b;
+
+end
+
+
+endmodule
+
 
 //=================================================
 //Breadboard
@@ -654,9 +875,23 @@ reg [31:0] C;
 
 wire [15:0][31:0] channels;
 wire [15:0] b;
-wire [15:0] outputADD;
-wire [15:0] outputAND;
+
+wire [15:0] Sum;
+wire [15:0] Product;
+wire [15:0] Quotient;     
+wire [15:0] Remainder;
+wire [15:0] Anded;		
+wire [15:0] Nanded;
+wire [15:0] Nored;
+wire [15:0] Noted;
+wire [15:0] Ored;
+wire [15:0] Xnored;
+wire [15:0] Xored;
+
+
+
 wire ADDerror;
+
 
 reg [15:0] regA;
 reg [15:0] regB;
@@ -670,7 +905,7 @@ AND and1(regA,regB,outputAND);
 
 
 //Accumulator Register
-DFF ACC1 [31:0] (clk,next,cur);
+m16bitDFF ACC1 [31:0] (clk,next,cur);
 
 
 assign channels[0]=cur;//NO-OP
