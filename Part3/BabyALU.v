@@ -119,7 +119,7 @@ endmodule
 //============================================
 //AND operation
 //============================================
-module ANDER(inputA,inputB,outputC);
+module AND(inputA,inputB,outputC);
 input  [15:0] inputA;
 input  [15:0] inputB;
 output [15:0] outputC;
@@ -147,6 +147,226 @@ begin
 	result[13]=inputA[13]&inputB[13];
 	result[14]=inputA[14]&inputB[14];
 	result[15]=inputA[15]&inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//OR operation
+//============================================
+module OR(inputA,inputB,outputC);
+input  [15:0] inputA;
+input  [15:0] inputB;
+output [15:0] outputC;
+wire   [15:0] inputA;
+wire   [15:0] inputB;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=inputA[0]|inputB[0];
+	result[1]=inputA[1]|inputB[1];
+	result[2]=inputA[2]|inputB[2];
+	result[3]=inputA[3]|inputB[3];
+	result[4]=inputA[4]|inputB[4];
+	result[5]=inputA[5]|inputB[5];
+	result[6]=inputA[6]|inputB[6];
+	result[7]=inputA[7]|inputB[7];
+	result[8]=inputA[8]|inputB[8];
+	result[9]=inputA[9]|inputB[9];
+	result[10]=inputA[10]|inputB[10];
+	result[11]=inputA[11]|inputB[11];
+	result[12]=inputA[12]|inputB[12];
+	result[13]=inputA[13]|inputB[13];
+	result[14]=inputA[14]|inputB[14];
+	result[15]=inputA[15]|inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//XOR operation
+//============================================
+module XOR(inputA,inputB,outputC);
+input  [15:0] inputA;
+input  [15:0] inputB;
+output [15:0] outputC;
+wire   [15:0] inputA;
+wire   [15:0] inputB;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=inputA[0]^inputB[0];
+	result[1]=inputA[1]^inputB[1];
+	result[2]=inputA[2]^inputB[2];
+	result[3]=inputA[3]^inputB[3];
+	result[4]=inputA[4]^inputB[4];
+	result[5]=inputA[5]^inputB[5];
+	result[6]=inputA[6]^inputB[6];
+	result[7]=inputA[7]^inputB[7];
+	result[8]=inputA[8]^inputB[8];
+	result[9]=inputA[9]^inputB[9];
+	result[10]=inputA[10]^inputB[10];
+	result[11]=inputA[11]^inputB[11];
+	result[12]=inputA[12]^inputB[12];
+	result[13]=inputA[13]^inputB[13];
+	result[14]=inputA[14]^inputB[14];
+	result[15]=inputA[15]^inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//XNOR operation
+//============================================
+module XNOR(inputA,inputB,outputC);
+input  [15:0] inputA;
+input  [15:0] inputB;
+output [15:0] outputC;
+wire   [15:0] inputA;
+wire   [15:0] inputB;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=inputA[0]~^inputB[0];
+	result[1]=inputA[1]~^inputB[1];
+	result[2]=inputA[2]~^inputB[2];
+	result[3]=inputA[3]~^inputB[3];
+	result[4]=inputA[4]~^inputB[4];
+	result[5]=inputA[5]~^inputB[5];
+	result[6]=inputA[6]~^inputB[6];
+	result[7]=inputA[7]~^inputB[7];
+	result[8]=inputA[8]~^inputB[8];
+	result[9]=inputA[9]~^inputB[9];
+	result[10]=inputA[10]~^inputB[10];
+	result[11]=inputA[11]~^inputB[11];
+	result[12]=inputA[12]~^inputB[12];
+	result[13]=inputA[13]~^inputB[13];
+	result[14]=inputA[14]~^inputB[14];
+	result[15]=inputA[15]~^inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//NOR operation
+//============================================
+module NOR(inputA,inputB,outputC);
+input  [15:0] inputA;
+input  [15:0] inputB;
+output [15:0] outputC;
+wire   [15:0] inputA;
+wire   [15:0] inputB;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=inputA[0]~|inputB[0];
+	result[1]=inputA[1]~|inputB[1];
+	result[2]=inputA[2]~|inputB[2];
+	result[3]=inputA[3]~|inputB[3];
+	result[4]=inputA[4]~|inputB[4];
+	result[5]=inputA[5]~|inputB[5];
+	result[6]=inputA[6]~|inputB[6];
+	result[7]=inputA[7]~|inputB[7];
+	result[8]=inputA[8]~|inputB[8];
+	result[9]=inputA[9]~|inputB[9];
+	result[10]=inputA[10]~|inputB[10];
+	result[11]=inputA[11]~|inputB[11];
+	result[12]=inputA[12]~|inputB[12];
+	result[13]=inputA[13]~|inputB[13];
+	result[14]=inputA[14]~|inputB[14];
+	result[15]=inputA[15]~|inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//NAND operation
+//============================================
+module NAND(inputA,inputB,outputC);
+input  [15:0] inputA;
+input  [15:0] inputB;
+output [15:0] outputC;
+wire   [15:0] inputA;
+wire   [15:0] inputB;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=inputA[0]~&inputB[0];
+	result[1]=inputA[1]~&inputB[1];
+	result[2]=inputA[2]~&inputB[2];
+	result[3]=inputA[3]~&inputB[3];
+	result[4]=inputA[4]~&inputB[4];
+	result[5]=inputA[5]~&inputB[5];
+	result[6]=inputA[6]~&inputB[6];
+	result[7]=inputA[7]~&inputB[7];
+	result[8]=inputA[8]~&inputB[8];
+	result[9]=inputA[9]~&inputB[9];
+	result[10]=inputA[10]~&inputB[10];
+	result[11]=inputA[11]~&inputB[11];
+	result[12]=inputA[12]~&inputB[12];
+	result[13]=inputA[13]~&inputB[13];
+	result[14]=inputA[14]~&inputB[14];
+	result[15]=inputA[15]~&inputB[15];
+
+	outputC=result;
+end
+
+endmodule
+
+//============================================
+//NOT operation
+//============================================
+module NOT(inputA,outputC);
+input  [15:0] inputA;
+output [15:0] outputC;
+wire   [15:0] inputA;
+reg    [15:0] outputC;
+
+reg    [15:0] result;
+
+always@(*)
+begin
+	result[0]=~inputA[0];
+	result[1]=~inputA[1];
+	result[2]=~inputA[2];
+	result[3]=~inputA[3];
+	result[4]=~inputA[4];
+	result[5]=~inputA[5];
+	result[6]=~inputA[6];
+	result[7]=~inputA[7];
+	result[8]=~inputA[8];
+	result[9]=~inputA[9];
+	result[10]=~inputA[10];
+	result[11]=~inputA[11];
+	result[12]=~inputA[12];
+	result[13]=~inputA[13];
+	result[14]=~inputA[14];
+	result[15]=~inputA[15];
 
 	outputC=result;
 end
@@ -192,7 +412,7 @@ wire [31:0] cur;
 
 Mux mux1(channels,opcode,b);
 ADDER add1(regA,regB,outputADD,carry,ADDerror);
-ANDER and1(regA,regB,outputAND);
+AND and1(regA,regB,outputAND);
 
 
 //Accumulator Register
