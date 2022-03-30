@@ -90,35 +90,67 @@ FullAdder FA15(A[15],B[15],Carry[14],Carry[15],Sum[15]);
 endmodule
 
 
-//============================================
-//Decoder (n to M)
-//============================================
-module Dec(a,b);
-
-parameter n=4;
-parameter m=16;
-input [n-1:0] a;
-output [m-1:0] b;
-
-assign  b= 1<<a; //Shift 1 a places. Makes a 1-hot.
-
+//=================================================================
+// DECODER
+//=================================================================
+module m4x16Dec(binary,onehot);
+	input [3:0] binary;
+	output [15:0]onehot;
+	
+	assign onehot[ 0]=~binary[3]&~binary[2]&~binary[1]&~binary[0];
+	assign onehot[ 1]=~binary[3]&~binary[2]&~binary[1]& binary[0];
+	assign onehot[ 2]=~binary[3]&~binary[2]& binary[1]&~binary[0];
+	assign onehot[ 3]=~binary[3]&~binary[2]& binary[1]& binary[0];
+	assign onehot[ 4]=~binary[3]& binary[2]&~binary[1]&~binary[0];
+	assign onehot[ 5]=~binary[3]& binary[2]&~binary[1]& binary[0];
+	assign onehot[ 6]=~binary[3]& binary[2]& binary[1]&~binary[0];
+	assign onehot[ 7]=~binary[3]& binary[2]& binary[1]& binary[0];
+	assign onehot[ 8]= binary[3]&~binary[2]&~binary[1]&~binary[0];
+	assign onehot[ 9]= binary[3]&~binary[2]&~binary[1]& binary[0];
+	assign onehot[10]= binary[3]&~binary[2]& binary[1]&~binary[0];
+	assign onehot[11]= binary[3]&~binary[2]& binary[1]& binary[0];
+	assign onehot[12]= binary[3]& binary[2]&~binary[1]&~binary[0];
+	assign onehot[13]= binary[3]& binary[2]&~binary[1]& binary[0];
+	assign onehot[14]= binary[3]& binary[2]& binary[1]&~binary[0];
+	assign onehot[15]= binary[3]& binary[2]& binary[1]& binary[0];
+	
 endmodule
 
 
-//============================================
-//MUX Multiplexer 16 by 4
-//============================================
-module Mux(channels,select,b);
-input [15:0][31:0]channels;
-input       [15:0] select;
-output      [31:0] b;
-wire  [15:0][31:0] channels;
-reg         [31:0] b;
+//=================================================================
+//
+// STRUCTURAL MULTIPLEXER
+//
+// StructMux
+//
+// Combinational Logic of GATES
+// Parallels Course Material
+//
+//=================================================================
 
-always @(*)
-begin
- b=channels[select]; //This is disgusting....
-end
+//=================================================================
+module m16x32Mux(channels, select, b);
+input [15:0][31:0] channels;
+input      [15:0] select;
+output      [31:0] b;
+
+
+	assign b = ({32{select[15]}} & channels[15]) | 
+               ({32{select[14]}} & channels[14]) |
+			   ({32{select[13]}} & channels[13]) |
+			   ({32{select[12]}} & channels[12]) |
+			   ({32{select[11]}} & channels[11]) |
+			   ({32{select[10]}} & channels[10]) |
+			   ({32{select[ 9]}} & channels[ 9]) | 
+			   ({32{select[ 8]}} & channels[ 8]) |
+			   ({32{select[ 7]}} & channels[ 7]) |
+			   ({32{select[ 6]}} & channels[ 6]) |
+			   ({32{select[ 5]}} & channels[ 5]) | 
+			   ({32{select[ 4]}} & channels[ 4]) | 
+			   ({32{select[ 3]}} & channels[ 3]) | 
+			   ({32{select[ 2]}} & channels[ 2]) | 
+               ({32{select[ 1]}} & channels[ 1]) | 
+               ({32{select[ 0]}} & channels[ 0]) ;
 
 endmodule
 
@@ -725,6 +757,9 @@ wire [3:0] Op;
 reg [31:0] Result;
 reg [1:0] Error;
 
+reg [15:0] regA;
+reg [15:0] regB;
+
 //==================
 //FOR MULITIPLEXER
 //==================
@@ -732,7 +767,7 @@ wire [15:0][31:0]channels;
 wire [15:0] Onehot;
 wire [31:0] b;
  
-wire [15:0] Product;
+wire [31:0] Product;
 wire [15:0] Quotient;     
 wire [15:0] Remainder;
 wire [15:0] Anded;		
@@ -777,53 +812,54 @@ wire [31:0] Current;
 //Declare Modules
 //=====================
 
-m4x16Decoder Decoder(Op,Onehot);
+m4x16Dec Decoder(Op,Onehot);
 m16x32Mux Mux(channels,Onehot,b);
 
-m16bitAddSub AdderSubtractor (A,B,Mode,Sum,carry,OFErr);
-m16bitMultiplier Multiplier (A,B,Product);
-m16bitDivider Divider (A,B,Quotient,Div0Err); 
-m16bitModulus Modulus (A,B,Remainder,Mod0Err);
-m16bitAND And (A,B,Anded);
-m16bitNAND Nand (A,B, Nanded);
-m16bitNOR Nor (A,B Nored);
-m16bitNOT Not (A,B, Noted);
-m16bitOR Or (A,B, Ored);
-m16bitXNOR Xnor (A,B Xnored);
-m16bitXOR Xor (A,B, Xored);
+m16bitAddSub AdderSubtractor (regA,regB,Mode,Sum,carry,OFErr);
+m16bitMultiplier Multiplier (regA,regB,Product);
+m16bitDivider Divider (regA,regB,Quotient,Div0Err); 
+m16bitModulus Modulus (regA,regB,Remainder,Mod0Err);
+m16bitAND And (regA,regB,Anded);
+m16bitNAND Nand (regA,regB, Nanded);
+m16bitNOR Nor (regA,regB, Nored);
+m16bitNOT Not (A, Noted);
+m16bitOR Or (regA,regB, Ored);
+m16bitXNOR Xnor (regA,regB, Xnored);
+m16bitXOR Xor (regA,regB, Xored);
 m16bitDFF Accumulator [31:0] (Clock,Next,Current);
 
 //=========================
 //Connect Wires
 //=========================
 
-assign channels[ 0]={16'b0000,cur};
+assign channels[ 0]=		Current;
 assign channels[ 1]={{16{Sum[15]}},Sum};
 assign channels[ 2]={{16{Sum[15]}},Sum};
 assign channels[ 3]=         Product;
 assign channels[ 4]={{16{Quotient[15]}},Quotient};
 assign channels[ 5]={{16{Remainder[15]}},Remainder};
-assign channels[ 6]={16'b0000,unknown};
+assign channels[ 6]={16'b0000,Anded};
 assign channels[ 7]={16'b0000,unknown};
 assign channels[ 8]={16'b0000,unknown};
 assign channels[ 9]={16'b0000,unknown};
 assign channels[10]={16'b0000,unknown};
 assign channels[11]={16'b0000,unknown};
 assign channels[12]={16'b0000,unknown};
-assign channels[13]={16'b0000,unknown};
-assign channels[14]={16'b0000,unknown};
+assign channels[13]=32'b0;
+assign channels[14]=32'b11111111111111111111111111111111;
 assign channels[15]={16'b0000,unknown};
-
- 
 
 always@(*)
 begin
 
+regA=A;
+regB= Current[15:0];
+
 //NOTE TO GRADER
 //=================================================================
 //
-//Error-handling - Tried to keep the top-level diagram top-level. We did not want to draw out too many "And" and "Or" gates
-// Encapsulated the logic below in a block called Error-handling
+//Professors code - Tried to keep the top-level diagram top-level. We did not want to draw out too many "And" and "Or" gates
+// Encapsulated the logic below in a block called professor's code, as instructed by the professor himself
 //					|
 //					V
 //=================================================================
@@ -843,105 +879,10 @@ Error[1]=(Div0Err|Mod0Err)&(divcheck|modcheck);
 
 //Return value, register C(Testbench) = to wire b(Multiplexer)
 assign Result=b;
+assign Next=b;
 
 end
 
-
-endmodule
-
-
-//=================================================
-//Breadboard
-//=================================================
-module breadboard(clk,rst,A,B,C,opcode,error);
-//----------------------------------
-input clk;
-input rst;
-input [15:0] A;
-input [15:0] B;
-input [3:0] opcode;
-wire clk;
-wire rst;
-wire [15:0] A;
-wire [15:0] B;
-wire [3:0] opcode;
-
-output error;
-reg error;
-//----------------------------------
-output [31:0] C;
-reg [31:0] C;
-//----------------------------------
-
-wire [15:0][31:0] channels;
-wire [15:0] b;
-
-wire [15:0] Sum;
-wire [15:0] Product;
-wire [15:0] Quotient;     
-wire [15:0] Remainder;
-wire [15:0] Anded;		
-wire [15:0] Nanded;
-wire [15:0] Nored;
-wire [15:0] Noted;
-wire [15:0] Ored;
-wire [15:0] Xnored;
-wire [15:0] Xored;
-
-
-
-wire ADDerror;
-
-
-reg [15:0] regA;
-reg [15:0] regB;
-
-reg  [31:0] next;
-wire [31:0] cur;
-
-Mux mux1(channels,opcode,b);
-ADDER add1(regA,regB,outputADD,carry,ADDerror);
-AND and1(regA,regB,outputAND);
-
-
-//Accumulator Register
-m16bitDFF ACC1 [31:0] (clk,next,cur);
-
-
-assign channels[0]=cur;//NO-OP
-assign channels[1]=0;//RESET
-assign channels[2]=0;//GROUND=0
-assign channels[3]=0;//GROUND=0
-assign channels[4]=0;//GROUND=0
-assign channels[5]={16'b0000000000000000,outputADD};
-assign channels[6]=0;//GROUND=0
-assign channels[7]=0;//GROUND=0
-assign channels[8]=0;//GROUND=0
-assign channels[9]={16'b0000000000000000,outputAND};
-assign channels[10]=0;//GROUND=0
-assign channels[11]=0;//GROUND=0
-assign channels[12]=0;//GROUND=0
-assign channels[13]=0;//GROUND=0
-assign channels[14]=0;//GROUND=0
-assign channels[15]=0;//GROUND=0
-
-always @(*)
-begin
- regA= A;
- regB= cur[31:0]; //to get the lower two bytes...
- //high bytes=cur[31:16]
- //low bytes=cur[15:0]
- 
- //error=Div0 | Overflow;//Register=wire.
- 
- if (opcode==4'b1)
- begin
-   error=0;
- end
-
- assign C=b;//Might be better if C = Cur value....
- assign next=b;
-end
 
 endmodule
 
@@ -952,17 +893,17 @@ endmodule
 module testbench();
 
 //Local Variables
-   reg  clk;
-   reg  rst;
-   reg  [15:0] inputA;
-   reg  [15:0] inputB;
-   wire [15:0] outputC;
-   reg  [3:0] opcode;
-   reg [31:0] count;
-   wire error;
+   reg  Clock;
+   reg  Reset;
+   reg  [15:0] A;
+   reg  [15:0] B;
+   wire [31:0] Result;
+   reg  [3:0] Op;
+   reg [31:0] count; 
+   wire [1:0] Error;
 
 // create breadboard
-breadboard bb8(clk,rst,inputA,inputB,outputC,opcode,error);
+breadboard bb8(Clock,Reset,A,B,Result,Op,Error);
 
 
 //=================================================
@@ -971,9 +912,9 @@ breadboard bb8(clk,rst,inputA,inputB,outputC,opcode,error);
    initial begin //Start Clock Thread
      forever //While TRUE
         begin //Do Clock Procedural
-          clk=0; //square wave is low
+          Clock=0; //square wave is low
           #5; //half a wave is 5 time units
-          clk=1;//square wave is high
+          Clock=1;//square wave is high
           #5; //half a wave is 5 time units
 		  $display("Tick");
         end
@@ -990,11 +931,12 @@ breadboard bb8(clk,rst,inputA,inputB,outputC,opcode,error);
          begin
  
 		 
-		 case (opcode)
-		 0: $display("%32b ==> %32b         , NO-OP",bb8.cur,bb8.b);
-		 1: $display("%32b ==> %32b         , RESET",32'b00000000000000000000000000000000,bb8.b);
-		 5: $display("%32b  +  %32b = %32b  , ADD"  ,bb8.cur,inputA,bb8.b);
-		 9: $display("%32b AND %32b = %32b  , AND"  ,bb8.cur,inputA,bb8.b);
+		 case (Op)
+		 0: $display("%32b                    ==> %32b  , NO-OP",bb8.Current,bb8.b);
+		 1: $display("%32b  +  %16b = %32b  , ADD"  ,bb8.Current,bb8.regA,bb8.b);
+		 2: $display("%32b  -  %16b = %32b  , SUB"  ,bb8.Current,bb8.regA,bb8.b);
+		 6: $display("%32b AND %16b = %32b  , AND"  ,bb8.Current,bb8.regA,bb8.b);
+		 13: $display("%32b                    ==> %32b  , RESET",32'b0,bb8.b);
 		 endcase
 		 
 		 #10;
@@ -1006,73 +948,77 @@ breadboard bb8(clk,rst,inputA,inputB,outputC,opcode,error);
 //=================================================
 	initial begin//Start Stimulous Thread
 	#6;	
+	A=16'b0000;
+	Op=4'b1101;//RESET
+	#10
 	//---------------------------------
-	inputA=16'b0000;
-	opcode=4'b0000;//NO-OP
-	#10; 
+	A=16'b0000;
+	Op=4'b0000;//NO-OP
+	#10;
+	 
 	//---------------------------------
-	inputA=16'b0000;
-	opcode=4'b0001;//RESET
+	//A=16'b0000;
+	//Op=4'b1101;//RESET
+	//#10
+	//---------------------------------	
+	A=16'b0001;
+	Op=4'b0001;//ADD
+	#10;
+	//---------------------------------	
+	A=16'b0001;
+	Op=4'b0001;//ADD
 	#10
 	//---------------------------------	
-	inputA=16'b0001;
-	opcode=4'b0101;//ADD
-	#10;
-	//---------------------------------	
-	inputA=16'b0001;
-	opcode=4'b0101;//ADD
+	A=16'b0001;
+	Op=4'b0001;//ADD
 	#10
 	//---------------------------------	
-	inputA=16'b0001;
-	opcode=4'b0101;//ADD
+	A=16'b0000;
+	Op=4'b0000;//NOOP
+	#10;
+	//---------------------------------	
+	A=16'b0000;
+	Op=4'b1101;//RESET
+	#10;
+	//---------------------------------	
+	A=16'b1111;
+	Op=4'b0001;//ADD
 	#10
 	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0000;//NOOP
+	A=16'b0000;
+	Op=4'b0000;//NOOP
 	#10;
 	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0001;//RESET
+	A=16'b1011;
+	Op=4'b0110;//AND
 	#10;
 	//---------------------------------	
-	inputA=16'b1111;
-	opcode=4'b0101;//ADD
-	#10
-	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0000;//NOOP
-	#10;
-	//---------------------------------	
-	inputA=16'b1011;
-	opcode=4'b1001;//AND
-	#10;
-	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0000;//NOOP
+	A=16'b0000;
+	Op=4'b0000;//NOOP
 	//---------------------------------	
 	#5;
 	$display("Left in Ready State...OOPS!");
 	#5;
 	#50;
 	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0001;//Reset
+	A=16'b0000;
+	Op=4'b1101;//Reset
 	#10;
 	//---------------------------------	
-	inputA=16'b00;
-	opcode=4'b0000;//NOOP
+	A=16'b00;
+	Op=4'b0000;//NOOP
 	#10;
 	//---------------------------------	
-	inputA=16'b0001;
-	opcode=4'b0101;//ADD
+	A=16'b0001;
+	Op=4'b0001;//ADD
 	#5;
 	$display("Left in ADD State...OOPS!");
 	#5;
 	//Uh-oh...it was left in the ADD operation...its an addtion STATE!
 	#100
 	//---------------------------------	
-	inputA=16'b0000;
-	opcode=4'b0001;//RESET
+	A=16'b0000;
+	Op=4'b1101;//RESET
 	#10;
 	//---------------------------------	
  
