@@ -838,13 +838,13 @@ assign channels[ 2]={{16{Sum[15]}},Sum};
 assign channels[ 3]=         Product;
 assign channels[ 4]={{16{Quotient[15]}},Quotient};
 assign channels[ 5]={{16{Remainder[15]}},Remainder};
-assign channels[ 6]={16'b0000,Anded};
-assign channels[ 7]={16'b0000,unknown};
-assign channels[ 8]={16'b0000,unknown};
-assign channels[ 9]={16'b0000,unknown};
-assign channels[10]={16'b0000,unknown};
-assign channels[11]={16'b0000,unknown};
-assign channels[12]={16'b0000,unknown};
+assign channels[ 6]={{16{Anded[15]}},Anded};
+assign channels[ 7]={{16{Nanded[15]}},Nanded};
+assign channels[ 8]={{16{Nored[15]}},Nored};
+assign channels[ 9]={{16{Noted[15]}},Noted};
+assign channels[10]={{16{Ored[15]}},Ored};
+assign channels[11]={{16{Xnored[15]}},Xnored};
+assign channels[12]={{16{Xored[15]}},Xored};
 assign channels[13]=32'b0;
 assign channels[14]=32'b11111111111111111111111111111111;
 assign channels[15]={16'b0000,unknown};
@@ -932,11 +932,21 @@ breadboard bb8(Clock,Reset,A,B,Result,Op,Error);
  
 		 
 		 case (Op)
-		 0: $display("%32b                    ==> %32b  , NO-OP",bb8.Current,bb8.b);
-		 1: $display("%32b  +  %16b = %32b  , ADD"  ,bb8.Current,bb8.regA,bb8.b);
-		 2: $display("%32b  -  %16b = %32b  , SUB"  ,bb8.Current,bb8.regA,bb8.b);
-		 6: $display("%32b AND %16b = %32b  , AND"  ,bb8.Current,bb8.regA,bb8.b);
-		 13: $display("%32b                    ==> %32b  , RESET",32'b0,bb8.b);
+		 0: $display("%32b                      ==> %32b  , NO-OP",bb8.Current,bb8.b);
+		 1: $display("%32b   +   %16b = %32b  , Add"  ,bb8.Current,bb8.regA,bb8.b);
+		 2: $display("%32b   -   %16b = %32b  , Sub"  ,bb8.Current,bb8.regA,bb8.b);
+		 3: $display("%32b   *   %16b = %32b  , Mult"  ,bb8.Current,bb8.regA,bb8.b);
+		 4: $display("%32b   /   %16b = %32b  , Div"  ,bb8.Current,bb8.regA,bb8.b);
+		 5: $display("%32b  MOD  %16b = %32b  , Mod"  ,bb8.Current,bb8.regA,bb8.b);
+		 6: $display("%32b  AND  %16b = %32b  , And"  ,bb8.Current,bb8.regA,bb8.b);
+		 7: $display("%32b  NAND %16b = %32b  , Nand"  ,bb8.Current,bb8.regA,bb8.b);
+		 8: $display("%32b  NOR  %16b = %32b  , Nor"  ,bb8.Current,bb8.regA,bb8.b);
+		 9: $display("NOT %32b = %32b         , Not"  ,bb8.Current,bb8.b);
+		 10: $display("%32b   OR  %16b = %32b  , Or"  ,bb8.Current,bb8.regA,bb8.b);
+		 11: $display("%32b  XNOR %16b = %32b  , And"  ,bb8.Current,bb8.regA,bb8.b);
+		 12: $display("%32b  XOR  %16b = %32b  , And"  ,bb8.Current,bb8.regA,bb8.b);
+		 13: $display("%32b                      ==> %32b  , Reset",32'b0,bb8.b);
+		 14: $display("%32b                      ==> %32b  , Preset",32'b11111111111111111111111111111111,bb8.b);
 		 endcase
 		 
 		 #10;
@@ -955,21 +965,16 @@ breadboard bb8(Clock,Reset,A,B,Result,Op,Error);
 	A=16'b0000;
 	Op=4'b0000;//NO-OP
 	#10;
-	 
-	//---------------------------------
-	//A=16'b0000;
-	//Op=4'b1101;//RESET
-	//#10
 	//---------------------------------	
 	A=16'b0001;
 	Op=4'b0001;//ADD
 	#10;
 	//---------------------------------	
-	A=16'b0001;
+	A=16'b0010;
 	Op=4'b0001;//ADD
 	#10
 	//---------------------------------	
-	A=16'b0001;
+	A=16'b0101;
 	Op=4'b0001;//ADD
 	#10
 	//---------------------------------	
@@ -977,45 +982,49 @@ breadboard bb8(Clock,Reset,A,B,Result,Op,Error);
 	Op=4'b0000;//NOOP
 	#10;
 	//---------------------------------	
-	A=16'b0000;
-	Op=4'b1101;//RESET
+	A=16'b0010;
+	Op=4'b0011;//MULT
 	#10;
 	//---------------------------------	
-	A=16'b1111;
-	Op=4'b0001;//ADD
-	#10
-	//---------------------------------	
-	A=16'b0000;
-	Op=4'b0000;//NOOP
+	A=16'b0011;
+	Op=4'b0100;//DIV
 	#10;
 	//---------------------------------	
-	A=16'b1011;
+	A=16'b0011;
+	Op=4'b0101;//MOD
+	#10;
+	//---------------------------------	
+	A=16'b0000;
+	Op=4'b1110;//PRESET
+	#10;
+	//---------------------------------	
+	A=16'b0100110010111011;
+	Op=4'b0010;//SUB
+	#10;
+	//---------------------------------	
+	A=16'b1010101010101010;
 	Op=4'b0110;//AND
+	#10
+	//---------------------------------	
+	A=16'b1110100010100010;
+	Op=4'b0111;//NAND
 	#10;
 	//---------------------------------	
-	A=16'b0000;
-	Op=4'b0000;//NOOP
-	//---------------------------------	
-	#5;
-	$display("Left in Ready State...OOPS!");
-	#5;
-	#50;
-	//---------------------------------	
-	A=16'b0000;
-	Op=4'b1101;//Reset
+	A=16'b0011100000111011;
+	Op=4'b1000;//NOR
 	#10;
 	//---------------------------------	
-	A=16'b00;
-	Op=4'b0000;//NOOP
+	A=16'b1100110011001100;
+	Op=4'b1010;//OR
 	#10;
 	//---------------------------------	
-	A=16'b0001;
-	Op=4'b0001;//ADD
-	#5;
-	$display("Left in ADD State...OOPS!");
-	#5;
-	//Uh-oh...it was left in the ADD operation...its an addtion STATE!
-	#100
+	A=16'b1010111100001010;
+	Op=4'b1011;//XNOR
+	#10;
+	//---------------------------------	
+	A=16'b0000101011111010;
+	Op=4'b1100;//XOR
+	#10
 	//---------------------------------	
 	A=16'b0000;
 	Op=4'b1101;//RESET
