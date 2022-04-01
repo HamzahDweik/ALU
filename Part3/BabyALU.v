@@ -275,7 +275,7 @@ end
 endmodule
 
 //============================================
-//MULT operation
+//MULT operation with SHIFTING (bonus)
 //============================================
 module m16bitMultiplier(A,B,C);
 input  [15:0] A;
@@ -567,7 +567,6 @@ endmodule
 //=================================================================
 module breadboard(Clock,Reset,A,B,Result,Op,Error);
 
-
 input Clock;
 input Reset;
 input [15:0] A;
@@ -746,7 +745,6 @@ assign x = trunc(bb8.Current);
           #5; //half a wave is 5 time units
           Clock=1;//square wave is high
           #5; //half a wave is 5 time units
-		  $display("Tick");
         end
     end
 
@@ -759,21 +757,21 @@ assign x = trunc(bb8.Current);
          begin
 			 
 		 case (Op)
-		 0: $display("%32b      ==> %32b  , NO-OP",bb8.Current,bb8.b);
-		 1: $display("%16b   +   %16b = %32b  , Add"  ,x,bb8.regA,bb8.b);
-		 2: $display("%16b   -   %16b = %32b  , Sub"  ,x,bb8.regA,bb8.b);
-		 3: $display("%16b   *   %16b = %32b  , Mult"  ,x,bb8.regA,bb8.b);
-		 4: $display("%16b   /   %16b = %32b  , Div"  ,x,bb8.regA,bb8.b);
-		 5: $display("%16b  MOD  %16b = %32b  , Mod"  ,x,bb8.regA,bb8.b);
-		 6: $display("%16b  AND  %16b = %32b  , And"  ,x,bb8.regA,bb8.b);
-		 7: $display("%16b  NAND %16b = %32b  , Nand"  ,x,bb8.regA,bb8.b);
-		 8: $display("%16b  NOR  %16b = %32b  , Nor"  ,x,bb8.regA,bb8.b);
-		 9: $display("NOT %32b = %32b         , Not"  ,x,bb8.b);
-		 10: $display("%16b   OR  %16b = %32b  , Or"  ,x,bb8.regA,bb8.b);
-		 11: $display("%16b  XNOR %16b = %32b  , Xnor"  ,x,bb8.regA,bb8.b);
-		 12: $display("%16b  XOR  %16b = %32b  , Xor"  ,x,bb8.regA,bb8.b);
-		 13: $display("%16b      ==> %32b  , Reset",32'b0,bb8.b);
-		 14: $display("%16b      ==> %32b  , Preset",32'b11111111111111111111111111111111,bb8.b);
+		 0: $display("| %6d | %16b | %6d | %16b |   No-op   |  %4b  | %10d | %32b |  %2b   |",0,16'b0,x,x, Op,bb8.b,bb8.b,Error);
+		 1: $display("| %6d | %16b | %6d | %16b |   Add     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 2: $display("| %6d | %16b | %6d | %16b |   Sub     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 3: $display("| %6d | %16b | %6d | %16b |   Mult    |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 4: $display("| %6d | %16b | %6d | %16b |   Div     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 5: $display("| %6d | %16b | %6d | %16b |   Mod     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 6: $display("| %6d | %16b | %6d | %16b |   And     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 7: $display("| %6d | %16b | %6d | %16b |   Nand    |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 8: $display("| %6d | %16b | %6d | %16b |   Nor     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 9: $display("| %6d | %16b | %6d | %16b |   Not     |  %4b  | %10d | %32b |  %2b   |",0,16'b0,x,x,Op,bb8.b,bb8.b,Error);
+		 10: $display("| %6d | %16b | %6d | %16b |   Or      |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 11: $display("| %6d | %16b | %6d | %16b |   Xnor    |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 12: $display("| %6d | %16b | %6d | %16b |   Xor     |  %4b  | %10d | %32b |  %2b   |",bb8.regA,bb8.regA,x,x,Op,bb8.b,bb8.b,Error);
+		 13: $display("| %6d | %16b | %6d | %16b |   Reset   |  %4b  | %10d | %32b |  %2b   |",0,16'b0,0,16'b0,Op,bb8.b,bb8.b,Error);
+		 14: $display("| %6d | %16b | %6d | %16b |   Preset  |  %4b  | %10d | %32b |  %2b   |",0,16'b0,0,16'b0,Op,bb8.b,bb8.b,Error);
 		 endcase
 
 		 #10;
@@ -784,6 +782,12 @@ assign x = trunc(bb8.Current);
 //STIMULOUS Thread
 //=================================================
 	initial begin//Start Stimulous Thread
+	
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+
+
 	#6;
 	A=16'b0000;
 	Op=4'b1101;//RESET
@@ -854,9 +858,11 @@ assign x = trunc(bb8.Current);
 	#10
 	//---------------------------------
 	A=16'b0000;
-	Op=4'b1101;//RESET
+	Op=4'b1001;//RESET
 	#10;
 	//---------------------------------
+	
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
 
 	$finish;
 	end
