@@ -1075,7 +1075,7 @@ assign x = trunc(bb8.Current);
 	Op=4'b0000; 
 	#10
 
-	$display("| Volume of a Cube with side length %1d is %3d.                                                                                      |",sideOne,Result);
+	$display("| Volume of a Cube with side length %1d is %3d.                                                                                        |",sideOne,Result);
 
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
 	$display();
@@ -1104,7 +1104,7 @@ assign x = trunc(bb8.Current);
 	Op=4'b0000; 
 	#10
 
-	$display("| Perimeter of a square with side length %1d is %3d.                                                                                 |",sideOne,Result);
+	$display("| Perimeter of a square with side length %1d is %3d.                                                                                   |",sideOne,Result);
 
 	
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
@@ -1134,7 +1134,7 @@ assign x = trunc(bb8.Current);
 	Op=4'b0000; 
 	#10
 	
-	$display("| Area of a square with side length %1d is %3d.                                                                                     |",sideOne,Result);
+	$display("| Area of a square with side length %1d is %3d.                                                                                        |",sideOne,Result);
 
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
 	$display();
@@ -1213,7 +1213,7 @@ assign x = trunc(bb8.Current);
 
 	fraction = Result;
 
-	$display("| Surface Area of a sphere with radius %2d is %3d.%-2d.                                                                                         |",radius,whole,fraction);
+	$display("| Surface Area of a sphere with radius %2d is %3d.%-2d.                                                                                 |",radius,whole,fraction);
 
 	
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
@@ -1253,7 +1253,7 @@ assign x = trunc(bb8.Current);
 	A=16'd4;
 	Op=4'b0011; 
 	#10
-
+	
 	// divide by 3
 	A=16'd3;
 	Op=4'b0100; 
@@ -1300,7 +1300,7 @@ assign x = trunc(bb8.Current);
 
 	fraction = Result;
 	
-	$display("| Volume of a sphere with radius %2d is %3d.%-2d.                                                                                         |",radius,whole,fraction);
+	$display("| Volume of a sphere with radius %2d is %3d.%-2d.                                                                                       |",radius,whole,fraction);
 
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
 
