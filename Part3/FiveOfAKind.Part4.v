@@ -716,15 +716,25 @@ endmodule
 module testbench();
 
 //Local Variables
-   reg  Clock;
-   reg  Reset;
-   reg  [15:0] A;
-   reg  [15:0] B;
-   wire [31:0] Result;
-   reg  [3:0] Op;
-   reg [31:0] count;
-   wire [1:0] Error;
-   wire [15:0] x;
+   	reg  Clock;
+   	reg  Reset;
+   	reg  [15:0] A;
+   	reg  [15:0] B;
+   	wire [31:0] Result;
+   	reg  [3:0] Op;
+   	reg [31:0] count;
+   	wire [1:0] Error;
+   	wire [15:0] x;
+
+	reg [15:0] sideOne;
+	reg [15:0] sideTwo;
+	reg [15:0] sideThree;
+
+	reg [15:0] radius;
+	reg [31:0] hold;
+   	reg [31:0] whole;
+   	reg [31:0] fraction;
+   
 
 // create breadboard
 breadboard bb8(Clock,Reset,A,B,Result,Op,Error);
@@ -734,6 +744,7 @@ function [15:0] trunc(input [31:0] val32);
 endfunction
 
 assign x = trunc(bb8.Current);
+
 
 //=================================================
  //CLOCK Thread
@@ -783,72 +794,514 @@ assign x = trunc(bb8.Current);
 //=================================================
 	initial begin//Start Stimulous Thread
 	
+	
+	$display();
+	$display();	
+	$display("1. Perimeter of a Rectangle"); // Sum of all sides.
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	
+	sideOne = 5;
+	sideTwo = 7;
+
+	//Reset
+	#6;
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// Adding the length of side 1
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+
+	// Adding the length of side 2
+	A=sideTwo;
+	Op=4'b0001; 
+	#10
+	
+	// multiplying by 2 to find the perimeter
+	A=16'b0010;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000;
+	#10
+
+	$display("| Perimeter of a Rectangle with side lengths %2d and %2d is %3d.                                                                       |",sideOne,sideTwo,Result);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("2. Area of a Rectangle"); // length * Width
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the length of side one
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+
+	// multiply by the length of side two
+	A=sideTwo;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000;
+	#10
+
+	$display("| Area of a Rectangle with side lengths %2d and %2d is %3d.                                                                            |",sideOne,sideTwo,Result);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("3. Circumference of a Circle"); 
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	// The arc length of the circle 2pir
+	
+	radius=5;
+	
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the radius
+	A=radius;
+	Op=4'b0001; 
+	#10
+
+	// multiply the radius by 2 to find diameter
+	A=16'b0010;
+	Op=4'b0011; 
+	#10
+
+	// multiply by PI
+	A=16'd314;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	hold = Result;
+
+	// divide by 100 to find whole number
+	A=16'd100;
+	Op=4'b0100; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	whole = Result;
+
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the temp
+	A=hold;
+	Op=4'b0001; 
+	#10
+
+	// modulus by 100 to find the fraction
+	A=16'd100;
+	Op=4'b0101; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	fraction = Result;
+
+	$display("| Circumference of a circle with radius %2d is %3d.%-2d.                                                                                |",radius,whole,fraction);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("4. Area of a circle"); 
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	// The region occupied by the circle pi r^2
+	
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the radius
+	A=radius;
+	Op=4'b0001; 
+	#10
+
+	// square the radius
+	A=radius;
+	Op=4'b0011; 
+	#10
+
+	// multiply by PI
+	A=16'd314;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	hold = Result;
+
+	// divide by 100 to find whole number
+	A=16'd100;
+	Op=4'b0100; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	whole = Result;
+
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the temp
+	A=hold;
+	Op=4'b0001; 
+	#10
+
+	// modulus by 100 to find the fraction
+	A=16'd100;
+	Op=4'b0101; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	fraction = Result;
+
+	$display("| Area of a circle with radius %2d is %3d.%-2d.                                                                                         |",radius,whole,fraction);
+
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("5. Surface Area of a Cube");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	//Setting the side length
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+
+	//Multipying the side length to find the area
+	A=sideOne;
+	Op=4'b0011; 
+	#10
+	
+	//Multipying the side length by 6 to find the perimeter
+	A=16'b0110;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000;
+	#10
+
+	$display("| Surface Area of a Cube with side length %1d is %3d.                                                                                  |",sideOne,Result);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("6. Volume of a Cube");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// adding the side length
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+
+	// Multipying by the side length
+	A=sideOne;
+	Op=4'b0011; 
+	#10
+	
+	// multiplying by the side length
+	A=sideOne;
+	Op=4'b0011; 
+	#10
+	
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	$display("| Volume of a Cube with side length %1d is %3d.                                                                                      |",sideOne,Result);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("7. Perimeter of a Square");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// adding the side length
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+	
+	//Multipying the side length by 4 to find the perimeter
+	A=16'b0100;
+	Op=4'b0011; 
+	#10
+	
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	$display("| Perimeter of a square with side length %1d is %3d.                                                                                 |",sideOne,Result);
+
+	
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("8. Area of a Square");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// adding the side length
+	A=sideOne;
+	Op=4'b0001; 
+	#10
+
+	//Multipying the side length to find the area
+	A=sideOne;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+	
+	$display("| Area of a square with side length %1d is %3d.                                                                                     |",sideOne,Result);
+
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("9. Surface Area of a Sphere"); //4pi*r^2
 	$display("--------------------------------------------------------------------------------------------------------------------------------------");
 	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
 	$display("--------------------------------------------------------------------------------------------------------------------------------------");
 
 
-	#6;
+	radius = 2;
+
+	// reset	
 	A=16'b0000;
-	Op=4'b1101;//RESET
+	Op=4'b1101; 
 	#10
-	//---------------------------------
-	A=16'b0000;
-	Op=4'b0000;//NO-OP
+	
+	// adding radius
+	A=radius;
+	Op=4'b0001;
 	#10;
-	//---------------------------------
-	A=16'b0111;
-	Op=4'b0001;//ADD
-	#10;
-	//---------------------------------
-	A=16'b0011;
-	Op=4'b0010;//SUB
-	#10;
-	//---------------------------------
-	A=16'b11111010;
-	Op=4'b0011;//MULT
-	#10;
-	//---------------------------------
-	A=16'b00100000;
-	Op=4'b0100;//DIV
-	#10;
-	//---------------------------------
-	A=16'b0100;
-	Op=4'b0101;//MOD
-	#10;
-	//---------------------------------
-	A=16'b00100000;
-	Op=4'b0110;//AND
-	#10
-	//---------------------------------
-	A=16'b000000000101010;
-	Op=4'b1010;//OR
-	#10;
-	//---------------------------------
-	A=16'b0;
-	Op=4'b1001;//NOT
-	#10;
-	//---------------------------------
-	A=16'b1111111111111111;
-	Op=4'b1100;//XOR
-	#10
-	//---------------------------------
-	A=16'b1111111111110101;
-	Op=4'b1011;//XNOR
-	#10;
-	//---------------------------------
-	A=16'b1111111111111111;
-	Op=4'b0111;//NAND
-	#10;
-	//---------------------------------
-	A=16'b1111111111111111;
-	Op=4'b1000;//NOR
-	#10;
-	//---------------------------------
-	A=16'b0000;
-	Op=4'b1110;//PRESET
+
+	// multiplying radius
+	A=radius;
+	Op=4'b0011;
 	#10;
 	
+	// multiplying by 4
+	A=4;
+	Op=4'b0011;
+	#10;
+	
+	// multiply by PI
+	A=16'd314;
+	Op=4'b0011; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	hold = Result;
+
+	// divide by 100 to find whole number
+	A=16'd100;
+	Op=4'b0100; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	whole = Result;
+
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the temp
+	A=hold;
+	Op=4'b0001; 
+	#10
+
+	// modulus by 100 to find the fraction
+	A=16'd100;
+	Op=4'b0101; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	fraction = Result;
+
+	$display("| Surface Area of a sphere with radius %2d is %3d.%-2d.                                                                                         |",radius,whole,fraction);
+
+	
+	$display("-------------------------------------------------------------------------------------------------------------------------------------");
+	$display();
+	$display();	
+	$display("10. Volume of a Sphere"); //4/3pir^3 = 4.19 * r^3
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+	$display("|   I    |      Input       |   F    |     Feedback     | Operation | Opcode |     O      |              Output              | Error |");
+	$display("--------------------------------------------------------------------------------------------------------------------------------------");
+
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+	
+	// adding in radius
+	A=radius;
+	Op=4'b0001;
+	#10
+
+	// multiplying radius
+	A=radius;
+	Op=4'b0011;
+	#10;
+
+	// multiplying radius to find r^3
+	A=radius;
+	Op=4'b0011;
+	#10;
+
+	// multiply by 314
+	A=16'd314;
+	Op=4'b0011; 
+	#10
+
+	// multiply by 4
+	A=16'd4;
+	Op=4'b0011; 
+	#10
+
+	// divide by 3
+	A=16'd3;
+	Op=4'b0100; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	hold = Result;
+
+	// divide by 100 to find whole number
+	A=16'd100;
+	Op=4'b0100; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	whole = Result;
+
+	// reset
+	A=16'b0000;
+	Op=4'b1101; 
+	#10
+
+	// add in the temp
+	A=hold;
+	Op=4'b0001; 
+	#10
+
+	// modulus by 100 to find the fraction
+	A=16'd100;
+	Op=4'b0101; 
+	#10
+
+	// no-op
+	A=16'b0000;
+	Op=4'b0000; 
+	#10
+
+	fraction = Result;
+	
+	$display("| Volume of a sphere with radius %2d is %3d.%-2d.                                                                                         |",radius,whole,fraction);
+
 	$display("-------------------------------------------------------------------------------------------------------------------------------------");
 
 	$finish;
